@@ -222,18 +222,19 @@ app.post("/api/add-wallet", (req, res) => {
 class Alert {
   static idCounter = 0;
 
-  constructor(name, age, hunters) {
+  constructor(name, age, hunters, isExternal) {
     this.name = name;
     this.hunters = hunters;
     this.age = age;
+    this.isExternal = isExternal;
     this.id = `${Wallet.idCounter++}`;
   }
 }
 
-let alert1 = new Alert("Shmoo", 70, 15);
-let alert2 = new Alert("Silco", 20, 35);
-let alert3 = new Alert("Cryptoman", 843, 576);
-let alert4 = new Alert("Jorge", 25000, 13);
+let alert1 = new Alert("Shmoo", 70, 55, true);
+let alert2 = new Alert("Silco", 20, 35, false);
+let alert3 = new Alert("Cryptoman", 843, 576, false);
+let alert4 = new Alert("Jorge", 25000, 13, true);
 
 let alerts = [alert1, alert2, alert3, alert4];
 
