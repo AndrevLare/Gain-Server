@@ -161,22 +161,23 @@ app.post("/api/Dashboard/userData", (req, res) => {
 class Wallet {
   static idCounter = 0;
 
-  constructor(name, info, isInvitatorWallet) {
+  constructor(name, info, isInvitatorWallet, isExternalWallet) {
     this.isInvitatorWallet = isInvitatorWallet;
     this.name = name;
     this.info = info;
+    this.isExternalWallet = isExternalWallet;
     this.id = `${Wallet.idCounter++}`;
   }
 }
 
-let wallet1 = new Wallet(
-  "Stefan Godly",
-
-  123,
+let wallet1 = new Wallet("Stefan Godly", 123, true, false);
+let wallet2 = new Wallet("David Gonzalo", 5123, false, false);
+let wallet3 = new Wallet(
+  "Jorge Gonzalez",
+  "5sdfsdfsdf54sdf4s4jhg5f",
+  false,
   true
 );
-let wallet2 = new Wallet("David Gonzalo", 5123);
-let wallet3 = new Wallet("Jorge Gonzalez", "5sdfsdfsdf54sdf4s4jhg5f");
 let wallets = [wallet1, wallet2, wallet3];
 
 app.post("/api/wallet-overview", (req, res) => {
@@ -190,7 +191,6 @@ app.post("/api/editWallet", (req, res) => {
   const data = req.body;
   console.log("editar billetera con id: " + data.id);
   const wallet = wallets.find((wallet) => wallet.id === data.id);
-
   res.status(200).json({ wallet });
 });
 
@@ -209,6 +209,7 @@ app.post("/api/edit-wallet/save", (req, res) => {
 
   wallet = wallets.find((wallet) => wallet.id === data.id);
   wallet.name = data.name;
+  wallet.info = data.info ? data.info : wallet.info;
   res.status(200).json("Succesfully saved");
 });
 
@@ -255,7 +256,7 @@ app.post("/api/delete-alert", (req, res) => {
 });
 
 let tapAmount = 0.01;
-let symbol = "wETH";
+let symbol = "ETH";
 
 app.post("/api/settings/get", (req, res) => {
   const data = req.body;
@@ -308,4 +309,77 @@ app.post("/api/delete-trade", (req, res) => {
   trades = trades.filter((trade) => trade.id !== data.id);
 
   res.status(200).json({ message: "trade eliminado correctamente" });
+});
+
+class Moves {
+  static idCounter = 0;
+
+  constructor(type, value, age, lead, roi, leadValue) {
+    this.type = type;
+    this.value = value;
+    this.age = age;
+    this.lead = lead;
+    this.roi = roi;
+    this.leadValue = leadValue;
+    this.id = `${Wallet.idCounter++}`;
+  }
+}
+
+let move1 = new Moves("MUSKIT", 0.3, 1522, "HODL", 167, 0.67);
+let move2 = new Moves("WIF", 0.3, 1322, "YOTE", -13, 0.1);
+let move3 = new Moves("MUSKIT", 0.3, 125000, "HODL", 162, 1.2);
+let moves = [move1, move2, move3];
+
+app.post("/api/trade-overview/open-trades", (req, res) => {
+  console.log("enviar lista de trades abiertos");
+  res.status(200).json({
+    moves: moves,
+  });
+});
+
+class ClosedTrades {
+  static idCounter = 0;
+
+  constructor(value, type, initialAge, leadPercentage, roi, gain) {
+    this.type = type;
+    this.value = value;
+    this.initialAge = initialAge;
+    this.leadPercentage = leadPercentage;
+    this.roi = roi;
+    this.gain = gain;
+    this.id = `${Wallet.idCounter++}`;
+  }
+}
+
+let closedTrade1 = new ClosedTrades(
+  "123'456'789",
+  "MUSKIT",
+  8000,
+  100,
+  167,
+  0.67
+);
+let closedTrade2 = new ClosedTrades(
+  "123'456'789",
+  "MUSKIT",
+  8000,
+  100,
+  -15,
+  0.1
+);
+let closedTrade3 = new ClosedTrades(
+  "123'456'789",
+  "MUSKIT",
+  80000,
+  100,
+  12,
+  0.55
+);
+let closedTrades = [closedTrade1, closedTrade2, closedTrade3];
+
+app.post("/api/trade-overview/closed-trades", (req, res) => {
+  console.log("enviar lista de trades abiertos");
+  res.status(200).json({
+    moves: closedTrades,
+  });
 });
